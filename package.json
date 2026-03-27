@@ -1,0 +1,39 @@
+{
+  "name": "@sbe/relay",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@sbe/shared": "0.0.1",
+    "dotenv": "^17.2.3",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build:installer:win": "powershell.exe -ExecutionPolicy Bypass -File scripts/build-installer-win.ps1",
+    "build:prod:installer:win": "powershell.exe -ExecutionPolicy Bypass -File scripts/build-installer-win.ps1",
+    "build:prod:release:win": "powershell.exe -ExecutionPolicy Bypass -File scripts/build-release-win.ps1",
+    "build:release:win": "powershell.exe -ExecutionPolicy Bypass -File scripts/build-release-win.ps1",
+    "build:release:win:dev": "powershell.exe -ExecutionPolicy Bypass -File scripts/build-release-win-dev.ps1",
+    "launcher:win": "tsx src/launcher.ts",
+    "player-count:capture-templates": "tsx src/player-count/capture-templates.ts",
+    "player-count:roi": "tsx src/player-count/capture-roi.ts",
+    "player-count:live": "tsx src/player-count/live.ts",
+    "player-count:preview-16x9": "tsx src/player-count/preview-16x9.ts",
+    "player-count:save-template": "tsx src/player-count/save-template.ts",
+    "player-count:save-score-templates": "tsx src/player-count/save-score-templates.ts",
+    "build": "tsc -p tsconfig.json",
+    "start:launcher": "node dist/apps/relay/src/launcher.js",
+    "start": "node dist/apps/relay/src/index.js",
+    "test": "vitest run",
+    "lint": "node -e \"console.log('relay: lint placeholder')\"",
+    "typecheck": "tsc --noEmit"
+  }
+}

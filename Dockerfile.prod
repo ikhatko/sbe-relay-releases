@@ -1,0 +1,33 @@
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY apps/relay/package.json apps/relay/package.json
+COPY packages/shared/package.json packages/shared/package.json
+
+RUN npm ci
+
+COPY tsconfig.base.json ./
+COPY apps/relay apps/relay
+COPY packages/shared packages/shared
+
+RUN npm run build --workspace=@sbe/shared
+RUN npm run build --workspace=@sbe/relay
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY apps/relay/package.json apps/relay/package.json
+COPY packages/shared/package.json packages/shared/package.json
+
+RUN npm ci --omit=dev
+
+COPY --from=build /app/apps/relay/dist apps/relay/dist
+COPY --from=build /app/packages/shared/dist packages/shared/dist
+
+EXPOSE 3001
+
+CMD ["node", "apps/relay/dist/apps/relay/src/index.js"]
