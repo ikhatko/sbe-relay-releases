@@ -34,7 +34,7 @@ For install-friendly Windows usage:
 - `npm run start`
 - `npm run start:launcher`
 
-`launcher:win` watches for `cs2.exe` / `csgo.exe` and starts the relay only while the game is running.
+`launcher:win` watches for `cs2.exe` / `csgo.exe` and keeps relay runtime active so local `/auth`, `/status`, and `/relay/settings` are available even before the game starts.
 
 Windows packaging flow:
 - `npm run build:release:win -w @sbe/relay` builds a self-contained release folder with `node.exe`, relay `dist`, OCR templates, `SBE Relay Launcher.cmd`, and a tray launcher (`SBE Relay Tray.ps1` + `SBE Relay Tray.vbs`)

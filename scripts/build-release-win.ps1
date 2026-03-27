@@ -616,6 +616,7 @@ Start:
 
 Notes:
 - The launcher watches for cs2.exe / csgo.exe and starts relay automatically.
+- Relay local endpoints (/auth, /status, /relay/settings) stay available before game start.
 - The tray icon stays in the Windows notification area.
 - Double-click the tray icon to open live logs.
 - Writable data is stored in %LOCALAPPDATA%\SBE Relay.

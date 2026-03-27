@@ -235,7 +235,7 @@ export async function bootstrapLauncher(): Promise<void> {
   });
 
   let relayChild: ChildProcess | null = null;
-  let consecutiveGameMisses = 0;
+  let lastGameRunning: boolean | null = null;
   let shuttingDown = false;
   let resolveShutdown: (() => void) | null = null;
   const shutdownComplete = new Promise<void>((resolve) => {
@@ -258,13 +258,16 @@ export async function bootstrapLauncher(): Promise<void> {
       return;
     }
 
-    if (running) {
-      consecutiveGameMisses = 0;
-    } else {
-      consecutiveGameMisses += 1;
+    if (lastGameRunning === null || lastGameRunning !== running) {
+      writeLauncherLine(logPath, {
+        event: "relay_launcher_game_state_changed",
+        running,
+        watch: GAME_PROCESS_NAMES
+      });
+      lastGameRunning = running;
     }
 
-    if (running && !relayChild) {
+    if (!relayChild) {
       try {
         relayChild = startRelayChild(logPath);
       } catch (error) {
@@ -287,25 +290,6 @@ export async function bootstrapLauncher(): Promise<void> {
         relayChild = null;
       });
       return;
-    }
-
-    if (!running && relayChild) {
-      if (!shouldStopRelayAfterMisses(consecutiveGameMisses, stopMissesThreshold)) {
-        writeLauncherLine(logPath, {
-          event: "relay_launcher_game_miss_detected",
-          consecutiveMisses: consecutiveGameMisses,
-          stopMissesThreshold
-        });
-        return;
-      }
-      writeLauncherLine(logPath, {
-        event: "relay_launcher_child_stopping",
-        pid: relayChild.pid,
-        reason: "game_not_running",
-        consecutiveMisses: consecutiveGameMisses
-      });
-      relayChild.kill("SIGTERM");
-      relayChild = null;
     }
   };
 
